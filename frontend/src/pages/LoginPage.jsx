@@ -38,7 +38,7 @@ export default function LoginPage() {
           <div className="auth-logo">
             <div className="logo-icon">🏛️</div>
             <h1>Civic Issue Reporting System</h1>
-            <p>Government of India</p>
+            <p>Government of Andhra Pradesh</p>
           </div>
 
           <div className="auth-gov-banner">
@@ -91,7 +91,7 @@ export default function LoginPage() {
         </div>
 
         <div style={{ textAlign: 'center', marginTop: '1rem', fontSize: '0.7rem', color: 'var(--text-muted)' }}>
-          © Palasa Municipal Corporation, Andhra Pradesh. All rights reserved.
+          © Municipal Corporation, Andhra Pradesh. All rights reserved.
         </div>
       </div>
     </div>

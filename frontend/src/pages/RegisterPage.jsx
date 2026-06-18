@@ -7,7 +7,13 @@ export default function RegisterPage() {
   const { register } = useAuth();
   const { addNotif } = useNotif();
   const navigate = useNavigate();
-  const [form, setForm] = useState({ name: '', email: '', password: '', confirmPassword: '' });
+ const [form, setForm] = useState({
+  name: '',
+  email: '',
+  phone: '',
+  password: '',
+  confirmPassword: ''
+});
   const [err, setErr] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -17,7 +23,12 @@ export default function RegisterPage() {
     if (form.password !== form.confirmPassword) { setErr('Passwords do not match.'); return; }
     setLoading(true);
     try {
-      await register({ name: form.name, email: form.email, password: form.password });
+     await register({
+  name: form.name,
+  email: form.email,
+  phone: form.phone,
+  password: form.password
+});
       addNotif('success', 'Registration Successful', 'Welcome to the Civic Issue Portal');
       navigate('/dashboard');
     } catch (e) {
@@ -39,7 +50,7 @@ export default function RegisterPage() {
           <div className="auth-logo">
             <div className="logo-icon">🏛️</div>
             <h1>Citizen Registration</h1>
-            <p>Palasa Municipal Corporation</p>
+            <p>Andhra Pradesh Municipal Corporation</p>
           </div>
 
           <div className="auth-gov-banner">
@@ -57,6 +68,18 @@ export default function RegisterPage() {
               <input className="form-input" type="email" placeholder="Your active email address"
                 value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} required />
             </div>
+            <div className="form-group">
+  <label className="form-label req">Phone Number</label>
+  <input
+    className="form-input"
+    type="tel"
+    placeholder="10-digit mobile number"
+    value={form.phone}
+    onChange={e => setForm({ ...form, phone: e.target.value })}
+    required
+  />
+</div>
+
             <div className="form-group">
               <label className="form-label req">Password</label>
               <input className="form-input" type="password" placeholder="Minimum 6 characters"
@@ -90,7 +113,7 @@ export default function RegisterPage() {
         </div>
 
         <div style={{ textAlign: 'center', marginTop: '1rem', fontSize: '0.7rem', color: 'var(--text-muted)' }}>
-          © Palasa Municipal Corporation, Andhra Pradesh. All rights reserved.
+          © Municipal Corporation, Andhra Pradesh. All rights reserved.
         </div>
       </div>
     </div>

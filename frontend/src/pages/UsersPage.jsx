@@ -35,12 +35,14 @@ export default function UsersPage() {
         </div>
       </div>
       <div className="content">
-        <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+        <div className="card" style={{ padding: 0 }}>
+  <div className="table-wrapper">
           <table className="data-table">
             <thead>
               <tr>
                 <th>Name</th>
                 <th>Email</th>
+                <th>Phone</th>
                 <th>Role</th>
                 <th>Registered</th>
                 <th>Status</th>
@@ -61,6 +63,7 @@ export default function UsersPage() {
                     </div>
                   </td>
                   <td style={{ color: 'var(--text-secondary)' }}>{u.email}</td>
+                 <td>{u.phone || 'N/A'}</td>
                   <td>
                     <span style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px', padding: '2px 8px', borderRadius: '4px', background: u.role === 'admin' ? 'var(--primary-bg)' : 'var(--bg-muted)', color: u.role === 'admin' ? 'var(--primary)' : 'var(--text-secondary)', border: `1px solid ${u.role === 'admin' ? 'var(--primary-border)' : 'var(--border)'}` }}>
                       {u.role}
@@ -83,8 +86,9 @@ export default function UsersPage() {
                 </tr>
               ))}
             </tbody>
-          </table>
-        </div>
+         </table>
+</div>
+</div>
       </div>
     </div>
   );

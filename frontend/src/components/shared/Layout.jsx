@@ -2,6 +2,7 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useNotif } from '../../context/NotifContext';
 
+
 export default function Layout() {
   const { user, logout } = useAuth();
   const { addNotif } = useNotif();
@@ -32,13 +33,19 @@ export default function Layout() {
 
       {/* SIDEBAR */}
       <aside className="sidebar">
-        <div className="sidebar-logo">
-          <span className="sidebar-logo-icon">🏛️</span>
-          <div>
-            <div className="sidebar-logo-text">Civic Priority</div>
-            {/* <div className="sidebar-logo-sub">Palasa MC</div> */}
-          </div>
-        </div>
+       <NavLink
+  to="/"
+  className="sidebar-logo"
+  style={{
+    textDecoration: 'none',
+    color: 'inherit'
+  }}
+>
+  <span className="sidebar-logo-icon">🏛️</span>
+  <div>
+    <div className="sidebar-logo-text">Civic Priority</div>
+  </div>
+</NavLink>
 
         <nav className="sidebar-nav">
           <div className="sidebar-section-label">Main Menu</div>
@@ -80,7 +87,7 @@ export default function Layout() {
           <div className="gov-header-emblem">🏛️</div>
           <div className="gov-header-text">
             <h1>Smart Civic Issue Reporting & Prioritization System</h1>
-            <p>Government of India</p>
+            <p>Government of Andhra Pradesh</p>
           </div>
           <div className="gov-header-right">
             <div className="header-user">
