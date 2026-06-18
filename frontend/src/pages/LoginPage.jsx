@@ -28,7 +28,7 @@ export default function LoginPage() {
       <div style={{ width: '100%', maxWidth: 420 }}>
         {/* Government banner */}
         <div style={{ textAlign: 'center', marginBottom: '1.25rem' }}>
-          {/* <div style={{ fontSize: '2rem' }}>🏛️</div> */}
+          
           <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '0.25rem', textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: 600 }}>
             
           </div>

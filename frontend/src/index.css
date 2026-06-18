@@ -1212,3 +1212,72 @@ button, input, select, textarea { font-family: inherit; }
   }
 
 }
+
+
+
+.home-page {
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4rem 8%;
+  gap: 3rem;
+}
+
+.hero-content {
+  flex: 1;
+}
+
+.hero-content h1 {
+  font-size: 2.5rem;
+  color: var(--primary);
+  margin-bottom: 1rem;
+}
+
+.hero-content p {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  margin-bottom: 2rem;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.hero-image {
+  flex: 1;
+}
+
+.hero-image img {
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: var(--shadow-lg);
+}
+
+.features {
+  padding: 3rem 8%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
+  gap: 1rem;
+}
+
+.features .card h3 {
+  margin-bottom: 0.75rem;
+  color: var(--primary);
+}
+
+@media (max-width: 768px) {
+  .hero {
+    flex-direction: column;
+  }
+
+  .hero-content h1 {
+    font-size: 2rem;
+  }
+}
