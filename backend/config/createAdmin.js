@@ -23,12 +23,13 @@ const createAdmin = async () => {
       process.exit();
     }
 
-    const admin = await User.create({
-      name: 'System Admin',
-      email: adminEmail.toLowerCase().trim(),
-      password: 'admin123',
-      role: 'admin'
-    });
+   const admin = await User.create({
+  name: 'System Admin',
+  email: adminEmail.toLowerCase().trim(),
+  phone: '9999999999',
+  password: 'admin123',
+  role: 'admin'
+});
 
     console.log('✅ Admin created successfully');
     console.log('Email:', admin.email);

@@ -10,12 +10,14 @@ const { validate }           = require('../middleware/validate');
 const upload                 = require('../middleware/upload');
 
 const router = express.Router();
-router.use(protect);
 
-// Analytics & browse (before /:id to avoid conflict)
-router.get('/analytics', adminOnly, getAnalytics);
+// Public route for homepage slider
 router.get('/all', getAllComplaints);
 
+// Protected routes
+router.use(protect);
+
+router.get('/analytics', adminOnly, getAnalytics);
 // CRUD
 router.get('/',    getComplaints);
 

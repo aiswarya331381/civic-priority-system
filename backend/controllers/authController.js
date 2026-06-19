@@ -4,20 +4,32 @@ const { generateToken } = require('../middleware/auth');
 
 // @desc   Register user
 // @route  POST /api/auth/register
+
 exports.register = async (req, res, next) => {
   try {
-    const { name, email, password } = req.body;
+    
+    const { name, email, phone, password } = req.body;
 
-    if (!name || !email || !password) {
-      return res.status(400).json({ success: false, message: 'Name, email and password are required' });
-    }
+    if (!name || !email || !phone || !password) {
+  return res.status(400).json({
+    success: false,
+    message: 'Name, email, phone and password are required'
+  });
+}
 
     const existing = await User.findOne({ email: email.toLowerCase().trim() });
     if (existing) {
       return res.status(400).json({ success: false, message: 'Email already registered' });
     }
 
-    const user  = await User.create({ name: name.trim(), email: email.toLowerCase().trim(), password, role: 'user' });
+   const user = await User.create({
+  name: name.trim(),
+  email: email.toLowerCase().trim(),
+  phone: phone.trim(),
+  password,
+  role: 'user'
+});
+
     const token = generateToken(user._id);
     res.status(201).json({ success: true, token, user });
   } catch (err) { next(err); }
