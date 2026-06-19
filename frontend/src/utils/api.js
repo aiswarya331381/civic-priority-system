@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'https://civic-backend-dgmu.onrender.com/api'
+ baseURL: 'https://civic-backend-dgmu.onrender.com/api'
 });
 
 api.interceptors.request.use((config) => {
