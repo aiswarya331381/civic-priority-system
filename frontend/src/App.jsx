@@ -28,7 +28,7 @@ const PrivateRoute = ({ children, adminOnly = false }) => {
   }
 
   if (adminOnly && user.role !== 'admin') {
-   return <Navigate to="/app/dashboard" replace />;
+   return <Navigate to="/dashboard" replace />;
   }
 
   return children;
@@ -40,7 +40,7 @@ const PublicRoute = ({ children }) => {
   if (loading) return <Spinner fullScreen />;
 
   if (user) {
-   return <Navigate to="/app/dashboard" replace />;
+   return <Navigate to="/dashboard" replace />;
   }
 
   return children;
@@ -75,8 +75,8 @@ export default function App() {
           />
 
           {/* Protected Routes */}
-         <Route
-  path="/app"
+        <Route
+  path="/"
   element={
     <PrivateRoute>
       <Layout />
