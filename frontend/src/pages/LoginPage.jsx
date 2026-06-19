@@ -17,7 +17,7 @@ export default function LoginPage() {
     try {
       const user = await login(form.email, form.password);
       addNotif('success', `Welcome, ${user.name}`, `Signed in as ${user.role}`);
-      navigate('/dashboard');
+      navigate('/app/dashboard');
     } catch (e) {
       setErr(e.response?.data?.message || 'Login failed. Please check your credentials.');
     } finally { setLoading(false); }
