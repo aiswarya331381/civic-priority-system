@@ -1,6 +1,20 @@
-# 🏛️ Civic Issue Reporting & Prioritization System
+🏛️ Smart Civic Issue Reporting & Prioritization System
 
-A full-stack MERN application for reporting, tracking, and prioritizing civic issues with real-time location mapping.
+A MERN Stack web application for reporting, tracking, and managing civic issues such as potholes, garbage overflow, drainage problems, water leakage, and streetlight failures.
+
+🌐 Live Demo
+
+https://civic-priority-system.vercel.app
+
+🔑 Admin Demo Credentials
+
+Email: admin@civic.gov.in
+
+Password: admin123
+
+Citizen Account
+
+Register a new account using the registration page.
 
 ---
 
@@ -11,7 +25,7 @@ A full-stack MERN application for reporting, tracking, and prioritizing civic is
 - Role-based authentication (User/Admin)
 - Complaint tracking and status management
 - Secure REST APIs using JWT authentication
-- Responsive government-style dashboard UI
+- Responsive UI
 - Image upload support for complaints
 
 ---
@@ -20,8 +34,6 @@ A full-stack MERN application for reporting, tracking, and prioritizing civic is
 
 ### Frontend
 - React.js
-- JavaScript
-- CSS
 - Vite
 
 ### Backend
@@ -29,7 +41,7 @@ A full-stack MERN application for reporting, tracking, and prioritizing civic is
 - Express.js
 
 ### Database
-- MongoDB
+- MongoDB Atlas
 
 ### Maps & Authentication
 - Leaflet / OpenStreetMap
@@ -57,63 +69,6 @@ npm run dev
 
 ---
 
-## Environment Variables
 
-Create a `.env` file inside the `backend` folder and add:
 
-```env
-PORT=5000
-MONGO_URI=your_mongodb_uri
-JWT_SECRET=your_secret
-```
 
----
-
-## Project Structure
-
-```text
-CIVIC_COPY/
-├── backend/
-│   ├── config/
-│   ├── controllers/
-│   ├── middleware/
-│   ├── models/
-│   ├── routes/
-│   ├── uploads/
-│   ├── .env.example
-│   ├── package.json
-│   └── server.js
-│
-├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── context/
-│   │   ├── hooks/
-│   │   ├── pages/
-│   │   ├── utils/
-│   │   ├── App.jsx
-│   │   ├── index.css
-│   │   └── main.jsx
-│   │
-│   ├── index.html
-│   ├── package.json
-│   └── vite.config.js
-│
-└── README.md
-```
-
----
-
-## Future Enhancements
-
-- AI-based complaint priority prediction
-- Email/SMS notifications
-- Advanced analytics dashboard
-- Mobile responsive optimization
-- Government department integration
-
----
-
-## Author
-
-Developed as a full-stack MERN civic management application for smart complaint reporting and prioritization.
