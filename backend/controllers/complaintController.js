@@ -51,6 +51,7 @@ exports.createComplaint = async (req, res, next) => {
 // ── Get complaints ───────────────────────────────────────────────────────────
 // GET /api/complaints  (own for user, all for admin)
 exports.getComplaints = async (req, res, next) => {
+   
   try {
     const { status, severity, search, sort = '-priorityScore', page = 1, limit = 50 } = req.query;
     const query = {};
@@ -96,15 +97,29 @@ exports.getAllComplaints = async (req, res, next) => {
 
 // ── Get single complaint ─────────────────────────────────────────────────────
 // GET /api/complaints/:id
+// GET /api/complaints/:id
 exports.getComplaint = async (req, res, next) => {
+ 
   try {
-    const complaint = await Complaint.findById(req.params.id).populate('userId', 'name email avatar');
-    if (!complaint) return res.status(404).json({ success: false, message: 'Complaint not found' });
-    if (req.user.role !== 'admin' && complaint.userId._id.toString() !== req.user._id.toString()) {
-      return res.status(403).json({ success: false, message: 'Not authorized' });
+    const complaint = await Complaint.findById(req.params.id)
+      .populate('userId', 'name email avatar');
+
+    if (!complaint) {
+      return res.status(404).json({
+        success: false,
+        message: 'Complaint not found'
+      });
     }
-    res.json({ success: true, complaint });
-  } catch (err) { next(err); }
+
+    // Allow every logged-in user to view complaints
+    res.json({
+      success: true,
+      complaint
+    });
+
+  } catch (err) {
+    next(err);
+  }
 };
 
 // ── Update complaint (admin) ──────────────────────────────────────────────────
