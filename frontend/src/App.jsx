@@ -6,7 +6,7 @@ import { NotifProvider } from './context/NotifContext';
 import Layout from './components/shared/Layout';
 import Spinner from './components/shared/Spinner';
 
-import HomePage from './pages/HomePage';
+import HomePage1 from './pages/HomePage1';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
@@ -53,7 +53,7 @@ export default function App() {
         <Routes>
 
           {/* Landing Page */}
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<HomePage1 />} />
 
           {/* Public Routes */}
           <Route
