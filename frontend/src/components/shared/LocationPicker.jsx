@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect, useCallback } from 'react';
 import {
   MapContainer, TileLayer, Marker, Popup,
@@ -302,7 +301,6 @@ export default function LocationPicker({ value, onChange }) {
           overflow: 'hidden',
           boxShadow: 'var(--shadow-sm)',
         }}>
-          {/* Header */}
           <div style={{
             background: 'var(--primary-bg)',
             borderBottom: '1px solid var(--primary-border)',
@@ -317,7 +315,6 @@ export default function LocationPicker({ value, onChange }) {
             </span>
           </div>
 
-          {/* Address rows */}
           <div style={{ padding: '0.25rem 0.875rem 0.5rem' }}>
             <AddressRow icon="🛣️"  label="Street"   value={value.street}   />
             <AddressRow icon="🏘️"  label="Area"     value={value.area}     />
@@ -326,7 +323,6 @@ export default function LocationPicker({ value, onChange }) {
             <AddressRow icon="📍"  label="State"    value={value.state}    />
             <AddressRow icon="📮"  label="Pincode"  value={value.pincode}  />
 
-            {/* Coordinates */}
             <div style={{
               display: 'flex', alignItems: 'center', gap: '0.6rem',
               padding: '0.45rem 0',
@@ -347,7 +343,6 @@ export default function LocationPicker({ value, onChange }) {
             </div>
           </div>
 
-          {/* Full address at bottom */}
           {value.address && (
             <div style={{
               borderTop: '1px solid var(--border)',
@@ -364,7 +359,6 @@ export default function LocationPicker({ value, onChange }) {
         </div>
       )}
 
-      {/* Placeholder when no location selected */}
       {!value?.lat && (
         <div style={{
           padding: '0.75rem 1rem',

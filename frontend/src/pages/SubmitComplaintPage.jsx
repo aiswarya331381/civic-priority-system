@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useNotif } from '../context/NotifContext';
-import LocationPicker from '../components/shared/LocationPicker';
+import LocationPicker from '../components/shared/LocationPickerGoogle';
 import ImageUploader  from '../components/shared/ImageUploader';
 import api from '../utils/api';
 

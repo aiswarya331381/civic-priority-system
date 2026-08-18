@@ -5,12 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Civic Issue Prioritization System</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏛️</text></svg>" />
+  <script>
+    // Apply the saved theme (or Light by default) before React mounts, so
+    // the page never flashes the wrong theme on first paint.
+    (function () {
+      try {
+        var t = localStorage.getItem('civic_theme');
+        document.documentElement.setAttribute('data-theme', (t === 'light' || t === 'dark') ? t : 'light');
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
 </head>
 <body>
   <div id="root"></div>
-  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
- <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
+  <!--
+    NOTE: The Google Maps JavaScript API is loaded dynamically by
+    @react-google-maps/api (see components/shared/LocationPickerGoogle.jsx)
+    using the VITE_GOOGLE_MAPS_API_KEY environment variable, so it is never
+    hard-coded here. The old static <script src="...key=YOUR_API_KEY">
+    tags that used to live in this file have been removed.
+  -->
   <script type="module" src="/src/main.jsx"></script>
- 
 </body>
 </html>

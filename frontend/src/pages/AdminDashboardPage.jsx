@@ -47,7 +47,7 @@ export default function AdminDashboardPage() {
         <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))' }}>
           {[
             { label: 'Total',       value: total,                        color: 'var(--primary)' },
-            { label: 'Pending',     value: byStatus.pending    || 0,     color: '#92400e' },
+            { label: 'Pending',     value: byStatus.pending    || 0,     color: 'var(--yellow)' },
             { label: 'In Progress', value: byStatus['in-progress'] || 0, color: 'var(--cyan)' },
             { label: 'Resolved',    value: byStatus.resolved   || 0,     color: 'var(--green)' },
             { label: 'Critical',    value: bySeverity.critical || 0,     color: 'var(--red)' },
@@ -60,20 +60,20 @@ export default function AdminDashboardPage() {
         </div>
 
         {/* Charts */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
+        <div className="charts-grid-3">
           <div className="card">
             <div className="card-header"><span className="card-title">By Severity</span></div>
             <div className="chart-bar">
-              <Bar label="Critical" count={bySeverity.critical} color="#991b1b" />
-              <Bar label="High"     count={bySeverity.high}     color="#9a3412" />
-              <Bar label="Medium"   count={bySeverity.medium}   color="#92400e" />
-              <Bar label="Low"      count={bySeverity.low}      color="#15803d" />
+              <Bar label="Critical" count={bySeverity.critical} color="var(--red)" />
+              <Bar label="High"     count={bySeverity.high}     color="var(--orange)" />
+              <Bar label="Medium"   count={bySeverity.medium}   color="var(--yellow)" />
+              <Bar label="Low"      count={bySeverity.low}      color="var(--green)" />
             </div>
           </div>
           <div className="card">
             <div className="card-header"><span className="card-title">By Status</span></div>
             <div className="chart-bar">
-              <Bar label="Pending"  count={byStatus.pending}           color="#92400e" />
+              <Bar label="Pending"  count={byStatus.pending}           color="var(--yellow)" />
               <Bar label="In Prog"  count={byStatus['in-progress']}    color="var(--cyan)" />
               <Bar label="Resolved" count={byStatus.resolved}          color="var(--green)" />
             </div>
@@ -81,28 +81,28 @@ export default function AdminDashboardPage() {
           <div className="card">
             <div className="card-header"><span className="card-title">By Priority</span></div>
             <div className="chart-bar">
-              <Bar label="Critical" count={byPriority.critical} color="#991b1b" />
-              <Bar label="High"     count={byPriority.high}     color="#9a3412" />
-              <Bar label="Medium"   count={byPriority.medium}   color="#92400e" />
-              <Bar label="Low"      count={byPriority.low}      color="#15803d" />
+              <Bar label="Critical" count={byPriority.critical} color="var(--red)" />
+              <Bar label="High"     count={byPriority.high}     color="var(--orange)" />
+              <Bar label="Medium"   count={byPriority.medium}   color="var(--yellow)" />
+              <Bar label="Low"      count={byPriority.low}      color="var(--green)" />
             </div>
           </div>
         </div>
 
         {/* Top Priority — needs attention first */}
         <div className="card" style={{ padding: 0, overflow: 'hidden', marginBottom: '1.5rem' }}>
-          <div className="card-header" style={{ padding: '1rem 1.25rem', background: '#fef2f2', borderColor: '#fecaca' }}>
-            <span className="card-title" style={{ color: '#991b1b' }}>🔴 Highest Priority — Needs Immediate Attention</span>
-            <span style={{ fontSize: '0.75rem', color: '#991b1b', opacity: 0.75 }}>Sorted by priority score</span>
+          <div className="card-header" style={{ padding: '1rem 1.25rem', background: 'var(--red-bg)', borderColor: 'var(--red-border)' }}>
+            <span className="card-title" style={{ color: 'var(--red)' }}>🔴 Highest Priority — Needs Immediate Attention</span>
+            <span style={{ fontSize: '0.75rem', color: 'var(--red)', opacity: 0.75 }}>Sorted by priority score</span>
           </div>
-          <div style={{ overflowX: 'auto' }}>
+          <div className="table-wrapper">
             <table className="data-table">
               <thead><tr><th>Title</th><th>Priority</th><th>Severity</th><th>Upvotes</th><th>Location</th><th>Age</th><th>Action</th></tr></thead>
               <tbody>
                 {topPriority.length === 0 ? (
                   <tr><td colSpan={7} style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '2rem' }}>✅ No unresolved complaints</td></tr>
                 ) : topPriority.map(c => (
-                  <tr key={c._id} style={{ background: c.priorityLevel === 'critical' ? '#fef2f2' : c.priorityLevel === 'high' ? '#fff7ed' : undefined }}>
+                  <tr key={c._id} style={{ background: c.priorityLevel === 'critical' ? 'var(--red-bg)' : c.priorityLevel === 'high' ? 'var(--orange-bg)' : undefined }}>
                     <td style={{ maxWidth: 220, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 600 }}>{c.title}</td>
                     <td><PriorityBadge level={c.priorityLevel} score={c.priorityScore} /></td>
                     <td><SevBadge level={c.severity} /></td>
@@ -127,7 +127,7 @@ export default function AdminDashboardPage() {
             <span className="card-title">Recent Complaints</span>
             <button className="btn btn-secondary btn-sm" onClick={() => navigate('/complaints')}>View All</button>
           </div>
-          <div style={{ overflowX: 'auto' }}>
+          <div className="table-wrapper">
             <table className="data-table">
               <thead><tr><th>Title</th><th>Severity</th><th>Status</th><th>Priority</th><th>Location</th><th>Date</th></tr></thead>
               <tbody>

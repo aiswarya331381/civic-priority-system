@@ -1,9 +1,9 @@
 export default function PriorityBadge({ level, score }) {
   const styles = {
-    critical: { bg: '#fef2f2', color: '#991b1b', border: '#fecaca', label: '🔴 Critical' },
-    high:     { bg: '#fff7ed', color: '#9a3412', border: '#fed7aa', label: '🟠 High' },
-    medium:   { bg: '#fffbeb', color: '#92400e', border: '#fde68a', label: '🟡 Medium' },
-    low:      { bg: '#f0fdf4', color: '#15803d', border: '#bbf7d0', label: '🟢 Low' },
+    critical: { bg: 'var(--red-bg)',    color: 'var(--red)',    border: 'var(--red-border)',    label: '🔴 Critical' },
+    high:     { bg: 'var(--orange-bg)', color: 'var(--orange)', border: 'var(--orange-border)', label: '🟠 High' },
+    medium:   { bg: 'var(--yellow-bg)', color: 'var(--yellow)', border: 'var(--yellow-border)', label: '🟡 Medium' },
+    low:      { bg: 'var(--green-bg)',  color: 'var(--green)',  border: 'var(--green-border)',  label: '🟢 Low' },
   };
   const s = styles[level] || styles.low;
   return (

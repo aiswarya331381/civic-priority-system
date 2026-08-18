@@ -1,13 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useNotif } from '../context/NotifContext';
+import { useAuth } from '../context/AuthContext';
 import Spinner from '../components/shared/Spinner';
 import { fmt } from '../utils/helpers';
 import api from '../utils/api';
 
 export default function UsersPage() {
   const { addNotif } = useNotif();
+  const { user: currentUser } = useAuth();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [confirmTarget, setConfirmTarget] = useState(null); // user pending "Make Admin" confirmation
+  const [promoting, setPromoting] = useState(false);
 
   useEffect(() => {
     api.get('/users').then(r => setUsers(r.data.users)).finally(() => setLoading(false));
@@ -19,6 +23,21 @@ export default function UsersPage() {
       setUsers(u => u.map(x => x._id === id ? res.data.user : x));
       addNotif('success', 'User status updated');
     } catch (e) { addNotif('error', e.response?.data?.message || 'Failed'); }
+  };
+
+  const confirmMakeAdmin = async () => {
+    if (!confirmTarget) return;
+    setPromoting(true);
+    try {
+      // Backend re-verifies the requester is an admin before applying this —
+      // this call is not sufficient on its own, it's just the UI trigger.
+      const res = await api.post(`/users/${confirmTarget._id}/make-admin`);
+      setUsers(u => u.map(x => x._id === confirmTarget._id ? res.data.user : x));
+      addNotif('success', 'User promoted', `${confirmTarget.name} is now an administrator`);
+      setConfirmTarget(null);
+    } catch (e) {
+      addNotif('error', 'Could not promote user', e.response?.data?.message || 'Failed');
+    } finally { setPromoting(false); }
   };
 
   if (loading) return <div className="page center-pad"><Spinner /></div>;
@@ -51,12 +70,12 @@ export default function UsersPage() {
             </thead>
             <tbody>
               {users.length === 0 ? (
-                <tr><td colSpan={6} style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '2rem' }}>No users found</td></tr>
+                <tr><td colSpan={7} style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '2rem' }}>No users found</td></tr>
               ) : users.map(u => (
                 <tr key={u._id}>
                   <td>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                      <div style={{ width: 32, height: 32, borderRadius: '50%', background: u.role === 'admin' ? '#1e3a8a' : '#e5e7eb', color: u.role === 'admin' ? '#fff' : '#4b5563', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.72rem', fontWeight: 700, flexShrink: 0 }}>
+                      <div style={{ width: 32, height: 32, borderRadius: '50%', background: u.role === 'admin' ? 'var(--primary)' : 'var(--bg-muted)', color: u.role === 'admin' ? '#fff' : 'var(--text-secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.72rem', fontWeight: 700, flexShrink: 0, border: '1px solid var(--border)' }}>
                         {(u.avatar || u.name?.slice(0, 2) || 'U').toUpperCase()}
                       </div>
                       <span style={{ fontWeight: 600 }}>{u.name}</span>
@@ -66,7 +85,7 @@ export default function UsersPage() {
                  <td>{u.phone || 'N/A'}</td>
                   <td>
                     <span style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px', padding: '2px 8px', borderRadius: '4px', background: u.role === 'admin' ? 'var(--primary-bg)' : 'var(--bg-muted)', color: u.role === 'admin' ? 'var(--primary)' : 'var(--text-secondary)', border: `1px solid ${u.role === 'admin' ? 'var(--primary-border)' : 'var(--border)'}` }}>
-                      {u.role}
+                      {u.role === 'admin' ? '🛡️ ADMIN' : 'USER'}
                     </span>
                   </td>
                   <td style={{ color: 'var(--text-muted)', fontSize: '0.82rem' }}>{fmt(u.createdAt)}</td>
@@ -76,12 +95,25 @@ export default function UsersPage() {
                     </span>
                   </td>
                   <td>
-                    <button
-                      className={`btn btn-sm ${u.isActive ? 'btn-danger' : 'btn-success'}`}
-                      onClick={() => toggleUser(u._id)}
-                    >
-                      {u.isActive ? 'Deactivate' : 'Activate'}
-                    </button>
+                    <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
+                      {u.role !== 'admin' && (
+                        <button
+                          className="btn btn-sm btn-secondary"
+                          onClick={() => setConfirmTarget(u)}
+                          title="Grant this user administrator access"
+                        >
+                          🛡️ Make Admin
+                        </button>
+                      )}
+                      <button
+                        className={`btn btn-sm ${u.isActive ? 'btn-danger' : 'btn-success'}`}
+                        onClick={() => toggleUser(u._id)}
+                        disabled={currentUser && u._id === currentUser._id}
+                        title={currentUser && u._id === currentUser._id ? 'You cannot deactivate your own account' : undefined}
+                      >
+                        {u.isActive ? 'Deactivate' : 'Activate'}
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -90,6 +122,33 @@ export default function UsersPage() {
 </div>
 </div>
       </div>
+
+      {/* ── Make Admin confirmation dialog ── */}
+      {confirmTarget && (
+        <div
+          onClick={() => !promoting && setConfirmTarget(null)}
+          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}
+        >
+          <div onClick={e => e.stopPropagation()} className="card" style={{ width: '100%', maxWidth: 420, background: 'var(--bg-white)' }}>
+            <div style={{ fontSize: '1.75rem', textAlign: 'center', marginBottom: '0.5rem' }}>🛡️</div>
+            <h3 style={{ fontSize: '1rem', fontWeight: 700, textAlign: 'center', marginBottom: '0.5rem', color: 'var(--text)' }}>
+              Make {confirmTarget.name} an administrator?
+            </h3>
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textAlign: 'center', lineHeight: 1.6, marginBottom: '1.25rem' }}>
+              Are you sure you want to make this user an administrator? They will gain full access to
+              User Management, Analytics, and all admin-only controls.
+            </p>
+            <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center' }}>
+              <button className="btn btn-secondary" onClick={() => setConfirmTarget(null)} disabled={promoting}>
+                Cancel
+              </button>
+              <button className="btn btn-primary" onClick={confirmMakeAdmin} disabled={promoting}>
+                {promoting ? <><span className="spinner" style={{ borderTopColor: '#fff' }} /> Promoting...</> : '🛡️ Make Admin'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

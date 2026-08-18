@@ -1,19 +1,27 @@
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useNotif } from '../../context/NotifContext';
+import { useTheme } from '../../context/ThemeContext';
 
 
 export default function Layout() {
   const { user, logout } = useAuth();
   const { addNotif } = useNotif();
+  const { isDark, toggleTheme } = useTheme();
   const navigate = useNavigate();
+  const location = useLocation();
   const isAdmin = user?.role === 'admin';
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
     addNotif('info', 'Signed out successfully');
     navigate('/login');
   };
+
+  // Close the mobile off-canvas menu whenever the route changes
+  useEffect(() => { setMobileMenuOpen(false); }, [location.pathname]);
 
   const navItems = isAdmin
     ? [
@@ -31,8 +39,14 @@ export default function Layout() {
   return (
     <div className="app-layout">
 
+      {/* Overlay behind the off-canvas mobile sidebar */}
+      <div
+        className={`sidebar-overlay${mobileMenuOpen ? ' mobile-open' : ''}`}
+        onClick={() => setMobileMenuOpen(false)}
+      />
+
       {/* SIDEBAR */}
-      <aside className="sidebar">
+      <aside className={`sidebar${mobileMenuOpen ? ' mobile-open' : ''}`}>
        <NavLink
   to="/"
   className="sidebar-logo"
@@ -59,6 +73,15 @@ export default function Layout() {
               {n.label}
             </NavLink>
           ))}
+          <button
+            type="button"
+            className="theme-toggle theme-toggle-sidebar"
+            onClick={toggleTheme}
+            aria-label="Toggle dark mode"
+          >
+            <span className="icon">{isDark ? '☀️' : '🌙'}</span>
+            {isDark ? 'Light Mode' : 'Dark Mode'}
+          </button>
         </nav>
 
         <div className="sidebar-footer">
@@ -84,12 +107,31 @@ export default function Layout() {
       <div className="main-content">
         {/* Government Top Header */}
         <header className="gov-header">
+          <button
+            type="button"
+            className="mobile-menu-btn"
+            onClick={() => setMobileMenuOpen(o => !o)}
+            aria-label="Open menu"
+            aria-expanded={mobileMenuOpen}
+          >
+            {mobileMenuOpen ? '✕' : '☰'}
+          </button>
           <div className="gov-header-emblem">🏛️</div>
           <div className="gov-header-text">
             <h1>Smart Civic Issue Reporting & Prioritization System</h1>
             <p>Government of Andhra Pradesh</p>
           </div>
           <div className="gov-header-right">
+            <button
+              type="button"
+              className="theme-toggle"
+              onClick={toggleTheme}
+              aria-label="Toggle dark mode"
+              title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            >
+              <span className="icon">{isDark ? '☀️' : '🌙'}</span>
+              <span className="label">{isDark ? 'Light' : 'Dark'}</span>
+            </button>
             <div className="header-user">
               <div className="header-avatar">
                 {(user?.avatar || user?.name?.slice(0, 2) || 'U').toUpperCase()}

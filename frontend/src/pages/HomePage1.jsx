@@ -249,71 +249,9 @@ export default function HomePage1() {
           </div>
         </div>
 
-        {/* Center phone mockup */}
-        <div className="hp-phone-scene">
+ 
 
-  <div className="hp-phone-glow"></div>
-
-  <div className="hp-phone-wrap">
-
-    <div className="hp-phone-back"></div>
-
-    <div className="hp-phone">
-
-      <div className="hp-phone-screen">
-
-        <div
-          className="hp-phone-map"
-          style={{
-            backgroundImage: `url(${slides[current]?.image})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        >
-
-          <div className="hp-map-overlay"></div>
-
-          <div className="hp-map-pin">
-            📍
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-  <div className="hp-float-card">
-
-    <img
-      src={slides[current]?.image}
-      className="hp-float-img"
-      alt=""
-    />
-
-    <div className="hp-float-info">
-
-      <div className="hp-float-title">
-        {slides[current]?.title}
-      </div>
-
-      <div className="hp-float-loc">
-        📍 {slides[current]?.location}
-      </div>
-
-      <span
-        className={`hp-float-badge ${slides[current]?.severityClass}`}
-      >
-        {slides[current]?.severity}
-      </span>
-
-    </div>
-
-  </div>
-
-</div>
+ 
 
         {/* Right recent issues panel */}
         <div className="hp-recent-panel">
@@ -424,7 +362,7 @@ export default function HomePage1() {
         <div className="hp-contact-item">
             📞
             <h3>Phone</h3>
-            <p>+91 98765 43210</p>
+            <p>+91 9000000000</p>
         </div>
 
         <div className="hp-contact-item">

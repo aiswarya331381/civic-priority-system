@@ -2,6 +2,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { NotifProvider } from './context/NotifContext';
+import { ThemeProvider } from './context/ThemeContext';
 
 import Layout from './components/shared/Layout';
 import Spinner from './components/shared/Spinner';
@@ -48,6 +49,7 @@ const PublicRoute = ({ children }) => {
 
 export default function App() {
   return (
+    <ThemeProvider>
     <AuthProvider>
       <NotifProvider>
         <Routes>
@@ -132,5 +134,6 @@ export default function App() {
         </Routes>
       </NotifProvider>
     </AuthProvider>
+    </ThemeProvider>
   );
 }

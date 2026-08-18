@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { MapContainer, TileLayer, Marker } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import markerIcon   from 'leaflet/dist/images/marker-icon.png';
@@ -22,6 +22,29 @@ const AUTHORITIES = [
   'Traffic Police','Health Dept',
 ];
 
+// ── Forces Leaflet to recompute its size after mount ───────────────────────
+// Leaflet measures its container's pixel size the instant it mounts. If the
+// surrounding card/grid layout hasn't fully settled yet (very common right
+// after a page navigation, inside a CSS grid detail layout like this one),
+// Leaflet can lock in a 0×0 or stale size and then never actually render
+// any tiles — you just get a blank box. Calling `invalidateSize()` shortly
+// after mount (and again on window resize) is the standard fix.
+function MapSizeFix() {
+  const map = useMap();
+  useEffect(() => {
+    const t1 = setTimeout(() => map.invalidateSize(), 100);
+    const t2 = setTimeout(() => map.invalidateSize(), 400);
+    const onResize = () => map.invalidateSize();
+    window.addEventListener('resize', onResize);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      window.removeEventListener('resize', onResize);
+    };
+  }, [map]);
+  return null;
+}
+
 function StaticMap({ location }) {
   if (!location?.lat || !location?.lng) return null;
   return (
@@ -33,6 +56,7 @@ function StaticMap({ location }) {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <Marker position={[location.lat, location.lng]} />
+        <MapSizeFix />
       </MapContainer>
     </div>
   );
