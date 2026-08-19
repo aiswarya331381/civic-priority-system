@@ -1,32 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Civic Issue Prioritization System</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏛️</text></svg>" />
-  <script>
-    // Apply the saved theme (or Light by default) before React mounts, so
-    // the page never flashes the wrong theme on first paint.
-    (function () {
-      try {
-        var t = localStorage.getItem('civic_theme');
-        document.documentElement.setAttribute('data-theme', (t === 'light' || t === 'dark') ? t : 'light');
-      } catch (e) {
-        document.documentElement.setAttribute('data-theme', 'light');
-      }
-    })();
-  </script>
-</head>
-<body>
-  <div id="root"></div>
-  <!--
-    NOTE: The Google Maps JavaScript API is loaded dynamically by
-    @react-google-maps/api (see components/shared/LocationPickerGoogle.jsx)
-    using the VITE_GOOGLE_MAPS_API_KEY environment variable, so it is never
-    hard-coded here. The old static <script src="...key=YOUR_API_KEY">
-    tags that used to live in this file have been removed.
-  -->
-  <script type="module" src="/src/main.jsx"></script>
-</body>
-</html>
+import axios from 'axios';
+
+// Local dev (`npm run dev`): VITE_API_URL is unset, so this falls back to
+// the relative '/api' path, which Vite's dev server proxy (see
+// vite.config.js: server.proxy['/api']) forwards to your local backend at
+// http://localhost:5000.
+//
+// Deployed (Vercel, Netlify, etc.): there is no dev proxy in a static
+// production build, so a relative '/api' path resolves against your own
+// frontend domain — which has no backend behind it, causing exactly the
+// "405 Method Not Allowed" you're seeing (the static host rejects POST).
+// Setting VITE_API_URL as an environment variable in your hosting
+// platform's project settings points requests at your real backend
+// instead.
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_URL || '/api',
+});
+
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('civic_token');
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
+});
+
+api.interceptors.response.use(
+  (res) => res,
+  (err) => {
+    if (err.response?.status === 401) {
+      localStorage.removeItem('civic_token');
+      window.location.href = '/login';
+    }
+
+    return Promise.reject(err);
+  }
+);
+
+export default api;
