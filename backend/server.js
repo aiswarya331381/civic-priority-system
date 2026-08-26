@@ -19,14 +19,57 @@ app.use(helmet({
 }));
 
 // ── CORS ─────────────────────────────────────────────────────────────────────
-const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:5173').split(',').map(s => s.trim());
-app.use(cors({
+// Allowed origins come from three places, merged together:
+//   1. Hard-coded local dev origins (localhost:5173 AND 5174 — Vite's default
+//      port and its common fallback when 5173 is already in use).
+//   2. CLIENT_URL — the existing env var this project already used. Kept for
+//      backward compatibility; comma-separated list supported.
+//   3. FRONTEND_URL — new, optional env var for the deployed frontend origin
+//      (e.g. your Vercel/Netlify URL). Comma-separated list supported.
+const DEV_ORIGINS = ['http://localhost:5173', 'http://localhost:5174'];
+
+const envOrigins = [
+  ...(process.env.CLIENT_URL || '').split(','),
+  ...(process.env.FRONTEND_URL || '').split(','),
+]
+  .map(s => s.trim())
+  .filter(Boolean);
+
+const allowedOrigins = [...new Set([...DEV_ORIGINS, ...envOrigins])];
+
+const corsOptions = {
   origin: (origin, cb) => {
-    if (!origin || allowedOrigins.includes(origin)) cb(null, true);
-    else cb(new Error(`CORS blocked: ${origin}`));
+    // No `origin` header = server-to-server / curl / same-origin request —
+    // always allow. Otherwise only allow origins in the list.
+    if (!origin || allowedOrigins.includes(origin)) {
+      cb(null, true);
+    } else {
+      console.warn(`[CORS] Blocked request from origin: ${origin}`);
+      // IMPORTANT: pass `false`, not an Error. Passing an Error here makes
+      // Express fall through to the error handler, which returns a 500
+      // response with NO CORS headers at all — that's what was causing the
+      // preflight (OPTIONS) request to be blocked by the browser instead of
+      // cleanly rejected. `cb(null, false)` lets the `cors` package respond
+      // normally (without the Access-Control-Allow-Origin header) so the
+      // browser reports a standard, non-crashing CORS rejection.
+      cb(null, false);
+    }
   },
-  credentials: true,
-}));
+  credentials: true, // required — the frontend sends the JWT via
+                      // `Authorization: Bearer <token>` and axios is
+                      // configured with credentials-aware requests.
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+};
+
+app.use(cors(corsOptions));
+
+// Explicitly answer preflight (OPTIONS) requests for every route with the
+// same CORS options. The `cors` middleware above already does this
+// automatically for matched routes, but this is a safety net so preflight
+// requests are always answered correctly, including for routes not yet
+// mounted at this point in the file.
+app.options('*', cors(corsOptions));
 
 // ── Rate limiting ─────────────────────────────────────────────────────────────
 app.use('/api/', rateLimit({

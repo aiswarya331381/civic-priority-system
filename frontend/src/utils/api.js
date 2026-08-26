@@ -7,11 +7,10 @@ import axios from 'axios';
 //
 // Deployed (Vercel, Netlify, etc.): there is no dev proxy in a static
 // production build, so a relative '/api' path resolves against your own
-// frontend domain — which has no backend behind it, causing exactly the
-// "405 Method Not Allowed" you're seeing (the static host rejects POST).
-// Setting VITE_API_URL as an environment variable in your hosting
-// platform's project settings points requests at your real backend
-// instead.
+// frontend domain, which has no backend behind it — that's what causes a
+// "405 Method Not Allowed" on login/register. Setting VITE_API_URL as an
+// environment variable in your hosting platform's project settings (not in
+// this file) points requests at your real backend instead.
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || '/api',
 });

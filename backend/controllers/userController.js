@@ -26,3 +26,29 @@ exports.toggleUser = async (req, res, next) => {
     res.json({ success: true, user });
   } catch (err) { next(err); }
 };
+
+// @desc    Promote a user to admin
+// @route   POST /api/users/:id/make-admin
+// @access  Private/Admin
+//
+// SECURITY: this route is mounted behind `protect` + `adminOnly` in
+// routes/users.js, so by the time this handler runs Express has already
+// verified (1) the request carries a valid JWT for an existing, active
+// user and (2) that authenticated user's role is 'admin'. A non-admin
+// calling this endpoint directly (e.g. via curl/Postman) will be stopped
+// by `adminOnly` and receive a 403 before this code ever executes — the
+// promotion can never happen from the frontend alone.
+exports.makeAdmin = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) return res.status(404).json({ success: false, message: 'User not found' });
+
+    if (user.role === 'admin') {
+      return res.status(400).json({ success: false, message: 'User is already an administrator' });
+    }
+
+    user.role = 'admin';
+    await user.save();
+    res.json({ success: true, message: `${user.name} is now an administrator`, user });
+  } catch (err) { next(err); }
+};

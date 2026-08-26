@@ -24,11 +24,10 @@ const AUTHORITIES = [
 
 // ── Forces Leaflet to recompute its size after mount ───────────────────────
 // Leaflet measures its container's pixel size the instant it mounts. If the
-// surrounding card/grid layout hasn't fully settled yet (very common right
-// after a page navigation, inside a CSS grid detail layout like this one),
-// Leaflet can lock in a 0×0 or stale size and then never actually render
-// any tiles — you just get a blank box. Calling `invalidateSize()` shortly
-// after mount (and again on window resize) is the standard fix.
+// surrounding card/grid layout hasn't fully settled yet, Leaflet can lock in
+// a stale size and never render tiles — you just get a blank box. Calling
+// `invalidateSize()` shortly after mount (and again on window resize) fixes
+// this reliably.
 function MapSizeFix() {
   const map = useMap();
   useEffect(() => {

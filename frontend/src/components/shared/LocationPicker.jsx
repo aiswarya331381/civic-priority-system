@@ -38,6 +38,28 @@ function ClickHandler({ onMapClick }) {
   return null;
 }
 
+// ── Forces Leaflet to recompute its size after mount ───────────────────────
+// Leaflet measures its container's pixel size the instant it mounts. If the
+// surrounding card/form layout hasn't fully settled yet, Leaflet can lock in
+// a stale size and never render tiles — you just get a blank box. Calling
+// `invalidateSize()` shortly after mount (and again on window resize) fixes
+// this reliably.
+function MapSizeFix() {
+  const map = useMap();
+  useEffect(() => {
+    const t1 = setTimeout(() => map.invalidateSize(), 100);
+    const t2 = setTimeout(() => map.invalidateSize(), 400);
+    const onResize = () => map.invalidateSize();
+    window.addEventListener('resize', onResize);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      window.removeEventListener('resize', onResize);
+    };
+  }, [map]);
+  return null;
+}
+
 // ── Parse Nominatim address_components into clean fields ──────────────────────
 function parseAddress(addr = {}) {
   return {
@@ -264,6 +286,7 @@ export default function LocationPicker({ value, onChange }) {
             />
             <ClickHandler onMapClick={reverseGeocode} />
             <MapCenter position={position} />
+            <MapSizeFix />
             {position && (
               <Marker
                 position={[position.lat, position.lng]}
